@@ -22,6 +22,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -43,8 +44,8 @@ public class EditJourneyActivity extends AppCompatActivity {
     private final DateFormat DATE_FORMAT = new SimpleDateFormat("dd. MMM, YYYY");
 
     private boolean imagePicked = false;
-    private int editCardPosition = -1200;
-    private String originalJourneyName = null;
+    private int editCardPosition;
+    private boolean editMode =false;
 
     EditText editTitle;
     EditText editDesc;
@@ -61,6 +62,7 @@ public class EditJourneyActivity extends AppCompatActivity {
     ArrayList<String> imageFilePaths = new ArrayList<String>();
     LocationRequest locationRequest;
     private FusedLocationProviderClient mFusedLocationClient;
+    LinearLayout linearLayout;
 
 
     @Override
@@ -75,7 +77,7 @@ public class EditJourneyActivity extends AppCompatActivity {
         toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.toolbarSave);
         if(toolbar != null) {
             setSupportActionBar(toolbar);
-            getSupportActionBar().setTitle("Edit Journey");
+            getSupportActionBar().setTitle("Add Journey");
             getSupportActionBar().setHomeButtonEnabled(true);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
@@ -86,11 +88,17 @@ public class EditJourneyActivity extends AppCompatActivity {
         editDesc = (EditText) findViewById(R.id.imageCardDesc);
         dateText = (TextView) findViewById(R.id.imageCardDate);
         coverImage = (ImageView) findViewById(R.id.editCardCover);
+        linearLayout = (LinearLayout) findViewById(R.id.linearLayout2);
+
+        pickFromCamera = (ImageButton) findViewById(R.id.buttonEditCamera);
+        pickFromGallery = (ImageButton) findViewById(R.id.buttonEditGallery);
 
         Intent intent = getIntent();
         if (intent != null) {
             Bundle bundle = intent.getExtras();
             if (bundle != null){
+                editMode = true;
+                getSupportActionBar().setTitle("Edit Journey");
                 editTitle.setText(bundle.getString("journeyTitle"));
                 editDesc.setText(bundle.getString("journeyDescription"));
                 dateText.setText(bundle.getString("dateText"));
@@ -98,24 +106,21 @@ public class EditJourneyActivity extends AppCompatActivity {
                 coverImage.setScaleType(ImageView.ScaleType.CENTER_CROP);
                 imagePicked = true;
                 editCardPosition = bundle.getInt("position");
+                linearLayout.setVisibility(View.GONE);
             }
-        }
+            else {
+                String currentDate = DATE_FORMAT.format(new Date());
+                dateText.setText(currentDate);
 
-        pickFromCamera = (ImageButton) findViewById(R.id.buttonEditCamera);
-        pickFromGallery = (ImageButton) findViewById(R.id.buttonEditGallery);
-
-        String currentDate = DATE_FORMAT.format(new Date());
-        dateText.setText(currentDate);
-
-        pickFromCamera.setOnClickListener(new View.OnClickListener() {
-            @SuppressLint("MissingPermission")
-            @Override
-            public void onClick(View view) {
-                if (Lokacija.checkLocationPermissions(EditJourneyActivity.this)){
-                    mFusedLocationClient.getLastLocation()
-                            .addOnSuccessListener(EditJourneyActivity.this, new OnSuccessListener<Location>() {
-                                @Override
-                                public void onSuccess(Location location) {
+                pickFromCamera.setOnClickListener(new View.OnClickListener() {
+                    @SuppressLint("MissingPermission")
+                    @Override
+                    public void onClick(View view) {
+                        if (Lokacija.checkLocationPermissions(EditJourneyActivity.this)){
+                            mFusedLocationClient.getLastLocation()
+                                .addOnSuccessListener(EditJourneyActivity.this, new OnSuccessListener<Location>() {
+                                    @Override
+                                    public void onSuccess(Location location) {
                                     // Got last known location. In some rare situations this can be null.
                                     if (location != null) {
                                         try {
@@ -136,20 +141,20 @@ public class EditJourneyActivity extends AppCompatActivity {
                                                 })
                                                 .show();
                                     }
-                                }
-                            });
-                }
+                                    }
+                                });
+                        }
+                    }
+                });
+
+                pickFromGallery.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        ImagePickHandler.checkGalleryPermissions(EditJourneyActivity.this);
+                    }
+                });
             }
-        });
-
-        pickFromGallery.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ImagePickHandler.checkGalleryPermissions(EditJourneyActivity.this);
-            }
-        });
-
-
+        }
     }
 
     @Override
@@ -163,7 +168,7 @@ public class EditJourneyActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.save){
-            if (editCardPosition == -1200){
+            if (!editMode){
                 if (editTitle.getText().toString().equals("")){
                     Toast.makeText(getBaseContext(),"Please enter a title", Toast.LENGTH_SHORT).show();
                     return false;
@@ -203,7 +208,6 @@ public class EditJourneyActivity extends AppCompatActivity {
                 Bundle bundle = new Bundle();
                 bundle.putString("Edit.editTitle", editTitle.getText().toString());
                 bundle.putString("Edit.editDesc", editDesc.getText().toString());
-                bundle.putStringArrayList("Edit.imageFilePaths", imageFilePaths);
                 bundle.putInt("Edit.position", editCardPosition);
 
                 returnIntent.putExtras(bundle);

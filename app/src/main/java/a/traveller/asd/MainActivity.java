@@ -245,69 +245,46 @@ public class MainActivity extends AppCompatActivity {
         if (resultCode == RESULT_OK  && requestCode == EDIT_CARD){
             Bundle bundle = data.getExtras();
             int position = bundle.getInt("Edit.position");
-            if (position == -1200){
-                imageFilePaths = bundle.getStringArrayList("Edit.imageFilePaths");
-                String title = bundle.getString("Edit.editTitle");
-                String description = bundle.getString("Edit.editDesc");
-                String currentDate = bundle.getString("Edit.dateText");
+            imageFilePaths = bundle.getStringArrayList("Edit.imageFilePaths");
+            String title = bundle.getString("Edit.editTitle");
+            String description = bundle.getString("Edit.editDesc");
+            String currentDate = bundle.getString("Edit.dateText");
 
-                String parentImageFolder = title + "-"+ currentDate.toString();
+            String parentImageFolder = title + "-"+ currentDate.toString();
 
-                mainJourneyCards.add(0, new MainJourneyCard(imageFilePaths.get(0), title, description, currentDate, parentImageFolder) );
-                (recyclerViewMain.getAdapter()).notifyDataSetChanged();
+            mainJourneyCards.add(0, new MainJourneyCard(imageFilePaths.get(0), title, description, currentDate, parentImageFolder) );
+            (recyclerViewMain.getAdapter()).notifyDataSetChanged();
 
-                Bitmap coverImage = ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(imageFilePaths.get(0)), 600, 400);
-                String coverPath =  new File(imageFilePaths.get(0)).getName() + "_cover.jpg";
-                ImagePickHandler.saveToInternalStorage(MainActivity.this, coverImage, coverPath);
+            Bitmap coverImage = ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(imageFilePaths.get(0)), 600, 400);
+            String coverPath =  new File(imageFilePaths.get(0)).getName() + "_cover.jpg";
+            ImagePickHandler.saveToInternalStorage(MainActivity.this, coverImage, coverPath);
 
-                try {
-                    OutputStream fos = openFileOutput(parentImageFolder, MODE_PRIVATE);
-                    ObjectOutputStream of = new ObjectOutputStream(fos);
-                    of.writeObject(imageFilePaths);
-                    of.flush();
-                    of.close();
-                    fos.close();
-                    saveToInternalStorage();
-                }catch (IOException e){
-                    Log.d("IO Error", "Pisanje neuspesno");
-                    e.printStackTrace();
-                }
-            }
-            else {
-                imageFilePaths = bundle.getStringArrayList("Edit.imageFilePaths");
-                String title = bundle.getString("Edit.editTitle");
-                String description = bundle.getString("Edit.editDesc");
-                ArrayList<String> editedImagePaths = bundle.getStringArrayList("Edit.imageFilePaths");
-
-                //mainJourneyCards.get(position).setTopText(title);
-                //mainJourneyCards.get(position).setBotText(description);
-
-                Bitmap coverImage = ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(editedImagePaths.get(0)), 500, 300);
-                String realImagePaths = mainJourneyCards.get(position).getImagePath();
-
-                File coverPath =  new File( mainJourneyCards.get(position).getTopText() + "_cover.jpg");
-                if (coverPath.exists ())
-                    coverPath.delete ();
-                //ImagePickHandler.saveToInternalStorage(MainActivity.this, coverImage, coverPath);
-
-                (recyclerViewMain.getAdapter()).notifyDataSetChanged();
-
-
-
-                /*try {
-                    OutputStream fos = openFileOutput(parentImageFolder, MODE_PRIVATE);
-                    ObjectOutputStream of = new ObjectOutputStream(fos);
-                    of.writeObject(imageFilePaths);
-                    of.flush();
-                    of.close();
-                    fos.close();
-                    saveToInternalStorage();
-                }catch (IOException e){
-                    Log.d("IO Error", "Pisanje neuspesno");
-                    e.printStackTrace();
-                }*/
+            try {
+                OutputStream fos = openFileOutput(parentImageFolder, MODE_PRIVATE);
+                ObjectOutputStream of = new ObjectOutputStream(fos);
+                of.writeObject(imageFilePaths);
+                of.flush();
+                of.close();
+                fos.close();
+                saveToInternalStorage();
+            }catch (IOException e){
+                Log.d("IO Error", "Pisanje neuspesno");
+                e.printStackTrace();
             }
             Log.e("w", "EDIT_CARD RESULT_OK ");
+        }
+
+        if (resultCode == RESULT_OK  && requestCode == 8001){
+            Bundle bundle = data.getExtras();
+            //imageFilePaths = bundle.getStringArrayList("Edit.imageFilePaths");
+            int position = bundle.getInt("Edit.position");
+            String title = bundle.getString("Edit.editTitle");
+            String description = bundle.getString("Edit.editDesc");
+
+            mainJourneyCards.get(position).setTopText(title);
+            mainJourneyCards.get(position).setBotText(description);
+
+            (recyclerViewMain.getAdapter()).notifyDataSetChanged();
         }
     }
 

@@ -1,5 +1,6 @@
 package a.traveller.asd;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -63,6 +64,7 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.CardViewHolder> {
     }
 
     List<MainJourneyCard> mainJourneyCards;
+    private static int EDIT_REQUEST = 8001;
     //BitmapDecoder decoder;
 
     RVAdapter(List<MainJourneyCard> mainJourneyCards){
@@ -142,7 +144,7 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.CardViewHolder> {
                 //String parent = mainJourneyCards.get(position).getParentImageFolder();
                 //bundle.putString("parentImageFolder", mainJourneyCards.get(position).getParentImageFolder());
                 intent.putExtras(bundle);
-                view.getContext().startActivity(intent);
+                ((Activity) view.getContext()).startActivityForResult(intent, EDIT_REQUEST);
             }
         });
 
