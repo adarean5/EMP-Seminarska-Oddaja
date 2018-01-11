@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <EditText
+        android:id="@+id/editText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8sp"
+        android:layout_marginLeft="8sp"
+        android:ems="10"
+        android:hint="@string/kam"
+        android:maxLength="20"
+        android:inputType="textCapSentences" />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="8sp" />
+
+    <ImageView
+        android:id="@+id/newJourneyImageView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:maxHeight="230sp"
+        android:scaleType="centerCrop" />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="8sp" />
+
+    <EditText
+        android:id="@+id/editDescription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:ems="10"
+        android:layout_marginLeft="8sp"
+        android:layout_marginRight="8sp"
+        android:hint="Description"
+        android:maxLines="5"
+        android:maxLength="1000"
+        android:inputType="textMultiLine" />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="8sp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="5sp"
+        android:background="#e0e0e0"
+        />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="8sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="8sp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:text="Cover Image"
+            android:textSize="18sp"
+            tools:text="Cover Image" />
+
+        <Button
+            android:id="@+id/butttonDodajSlike"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_weight="1"
+            android:text="Gallery" />
+
+        <Button
+            android:id="@+id/buttonSelectCamera"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_weight="1"
+            android:text="Camera"
+            tools:text="Camera" />
+    </LinearLayout>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="8sp" />
+
+
+</LinearLayout>
